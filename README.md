@@ -64,8 +64,29 @@ conda activate cytools
 uv sync
 ```
 **3. Harvest the Multiverse**
-Mine the $h^{1,1}=10$ landscape for stable Calabi-Yau manifolds.
-(Note: Mac users might need use the KMP_DUPLICATE_LIB_OK=True override to prevent OpenMP library conflicts during heavy combinatorial math).
+Mine the $h^{1,1}=10$ landscape for mathematically stable Calabi-Yau manifolds. 
+
+```text
+NAME
+       DeepSpaceHarvester.py - Automated string theory landscape miner
+
+SYNOPSIS
+       KMP_DUPLICATE_LIB_OK=True python src/harvesting/DeepSpaceHarvester.py [OPTIONS]
+
+DESCRIPTION
+       Downloads complex topological scaffolds and calculates random triangulations 
+       to find mathematically stable universes. Automatically bypasses non-viable 
+       geometries and saves the exact structural matrices to the data/ directory.
+       
+       Note: Mac users must prepend KMP_DUPLICATE_LIB_OK=True to prevent OpenMP 
+       library collisions during heavy combinatorial math.
+
+OPTIONS
+       -u, --universes <int>
+              The exact number of valid universes to harvest. The script will 
+              dynamically calculate the required number of scaffolds to shatter 
+              in order to meet this quota.
+              (default: 1000)
 
 ```bash
 KMP_DUPLICATE_LIB_OK=True python src/harvesting/DeepSpaceHarvester.py
@@ -73,18 +94,95 @@ KMP_DUPLICATE_LIB_OK=True python src/harvesting/DeepSpaceHarvester.py
 
 **4. Process the Topology into Graphs**
 Strip the raw geometry of arbitrary identifiers and weave it into 3D Graph structures for the neural network.
+
+```text
+NAME
+       SmartGraphBuilder.py - Topological graph dataset processor
+
+SYNOPSIS
+       KMP_DUPLICATE_LIB_OK=True python src/processing/SmartGraphBuilder.py -i <input_file> [OPTIONS]
+
+DESCRIPTION
+       Loads raw geometric simplices from the harvester and translates them into 
+       undirected mathematical graphs. This strips away arbitrary vertex identifiers 
+       and forces the AI to learn pure spatial and topological relationships.
+
+       Note: Mac users must prepend KMP_DUPLICATE_LIB_OK=True to prevent OpenMP 
+       library collisions.
+
+OPTIONS
+       -i, --input <file>
+              (Required) Path to the raw harvested universes file.
+              Example: data/deep_space_50000.pt
+
+       -o, --output <file>
+              (Optional) Path to save the processed graph dataset. If omitted, 
+              the script will automatically mirror the input filename 
+              (e.g., data/smart_graph_50000.pt).
+
 ```bash 
-KMP_DUPLICATE_LIB_OK=True python src/processing/SmartGraphBuilder.py
+KMP_DUPLICATE_LIB_OK=True python src/processing/SmartGraphBuilder.py -i data/deep_space_1000.pt
 ```
 
 **5. Train the Models**
-Train the God Mode CVAE (Conditional Variational Autoencoder) to map the continuous probability cloud of the universes.
+Train the God Mode CVAE (Conditional Variational Autoencoder) to map the continuous probability cloud of the universe landscape.
+
+```text
+NAME
+       UniverseGenerator.py - Train the Generative Universe Model
+
+SYNOPSIS
+       KMP_DUPLICATE_LIB_OK=True python src/training/UniverseGenerator.py -i <input_file> [OPTIONS]
+
+DESCRIPTION
+       Loads the raw harvested dataset and trains a Conditional Variational Autoencoder. 
+       The model learns to encode geometric blueprints and target physical laws into a 
+       latent probability cloud, enabling the reverse-engineering of novel universes.
+
+OPTIONS
+       -i, --input <file>
+              (Required) Path to the raw harvested dataset. 
+              Example: data/deep_space_50000.pt
+
+       -o, --output <file>
+              (Optional) Path to save the trained model weights. 
+              (default: checkpoints/universe_generator.pth)
+
+       -e, --epochs <int>
+              (Optional) Number of training epochs. (default: 50)
+
+       -b, --batch_size <int>
+              (Optional) Batch size for the dataloader. (default: 64)
 ```bash
-KMP_DUPLICATE_LIB_OK=True python src/training/UniverseGenerator.py
+KMP_DUPLICATE_LIB_OK=True python src/training/UniverseGenerator.py -i data/deep_space_1000.pt
 ```
 
 **6. God Mode (Inference)**
-Command the trained CVAE to hallucinate a brand new universe by passing it arbitrary physical laws.
+Command the trained CVAE to hallucinate the geometric blueprint of a brand new universe by passing it arbitrary physical laws.
+
+```text
+NAME
+       GenerateUniverse.py - The Inverse Problem solver
+
+SYNOPSIS
+       KMP_DUPLICATE_LIB_OK=True python src/inference/GenerateUniverse.py [OPTIONS]
+
+DESCRIPTION
+       Loads the trained Generative God-Mode model and a random latent vector, 
+       then conditions the mathematical probability cloud with user-defined 
+       physical parameters. The AI will attempt to reverse-engineer and output 
+       the structural matrix (simplices) of a Calabi-Yau manifold that 
+       satisfies those exact laws.
+
+OPTIONS
+       -m, --model <file>
+              (Optional) Path to the trained model weights. 
+              (default: checkpoints/universe_generator.pth)
+
+       -p, --physics <float> [<float> ...]
+              (Optional) A list of target physical properties you want your 
+              custom universe to possess (mapped to intersection numbers).
+              (default: 24.0 -12.0 8.0)
 ```bash
 KMP_DUPLICATE_LIB_OK=True python src/inference/GenerateUniverse.py
 ```
