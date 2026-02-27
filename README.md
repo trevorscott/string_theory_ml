@@ -20,7 +20,7 @@ The codebase is structured into a four-stage experimental pipeline:
 
 ### 1. ⛏️ Harvesting (`src/harvesting/`)
 * **Objective:** Mine the string theory landscape for mathematically stable universes.
-* **Mechanism:** Uses combinatorial C++ backends to shatter complex $h^{1,1}$ scaffolds, extracting the precise matrices of simplices that form the structural boundaries of Calabi-Yau spaces. 
+* **Mechanism:** Uses combinatorial C++ backends to shatter complex $h^{1,1}$ scaffolds, extracting the precise matrices of simplices that form the structural boundaries of Calabi-Yau spaces. Put simply, the $h^{1,1}$ scaffold represents the overarching blueprint and complexity of the extra dimensions, while the "simplices" are the fundamental, indivisible building blocks (like high-dimensional triangles or Lego bricks) that connect together to build the final shape. 
 * **Key Scripts:** `DeepSpaceHarvester.py`, `BigHarvester.py`
 
 ### 2. 🧬 Processing (`src/processing/`)
