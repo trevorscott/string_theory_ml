@@ -37,9 +37,7 @@ To find the master equation of reality, we must separate **Topology** (the squis
 
 This pipeline acts as the ultimate filter. By using AI to master the topology and throw away the wrong universes, we are building the target list for the fault-tolerant quantum computers of the future. 
 
-## Setup & Execution
-
-*Note: Due to GitHub file size limits, the `data/` (.pt) and `checkpoints/` (.pth) directories are ignored. You must run the Harvesters locally to generate the raw universe datasets.*
+---
 
 ## Prerequisites
 Before igniting the pipeline, ensure your system has the following installed:
@@ -49,10 +47,14 @@ Before igniting the pipeline, ensure your system has the following installed:
 * **cytools**: The foundational backend for Calabi-Yau algebraic geometry.
 * **PyTorch**: The engine for the Graph Neural Networks and Generative models.
 
+## Setup & Execution
+
+*Note: Due to GitHub file size limits, the `data/` (.pt) and `checkpoints/` (.pth) directories are ignored. You must run the Harvesters locally to generate the raw universe datasets.*
+
 **1. Clone the Repository**
 To pull this project onto your local machine, open your terminal and run the following command. You can replace `string_theory_test` with whatever you want to name your local folder:
 ```bash
-git clone https://github.com/trevorscott/string_theory_ml.git string_theory_test
+git clone [https://github.com/trevorscott/string_theory_ml.git](https://github.com/trevorscott/string_theory_ml.git) string_theory_test
 cd string_theory_test
 ```
 
@@ -63,6 +65,7 @@ This project requires `cytools` (best installed via conda/mamba) and PyTorch. If
 conda activate cytools
 uv sync
 ```
+
 **3. Harvest the Multiverse**
 Mine the $h^{1,1}=10$ landscape for mathematically stable Calabi-Yau manifolds. 
 
@@ -87,7 +90,8 @@ OPTIONS
               dynamically calculate the required number of scaffolds to shatter 
               in order to meet this quota.
               (default: 1000)
-
+```
+**Example:**
 ```bash
 KMP_DUPLICATE_LIB_OK=True python src/harvesting/DeepSpaceHarvester.py
 ```
@@ -119,12 +123,75 @@ OPTIONS
               (Optional) Path to save the processed graph dataset. If omitted, 
               the script will automatically mirror the input filename 
               (e.g., data/smart_graph_50000.pt).
-
+```
+**Example:**
 ```bash 
 KMP_DUPLICATE_LIB_OK=True python src/processing/SmartGraphBuilder.py -i data/deep_space_1000.pt
 ```
 
-**5. Train the Models**
+**5. Train the Oracle (The Forward Problem)**
+Train a Graph Neural Network (GNN) to organically deduce the topological intersection numbers (the capacity for physical laws) directly from the discrete mathematical graph of the manifold.
+
+```text
+NAME
+       TrainGraphModel.py - Train the Predictive Physics Oracle
+
+SYNOPSIS
+       KMP_DUPLICATE_LIB_OK=True python src/training/TrainGraphModel.py -i <input_file> [OPTIONS]
+
+DESCRIPTION
+       Loads the processed 3D Graph datasets and trains a neural network to predict 
+       the continuous physical properties of the universe based purely on its 
+       geometric fingerprint. This shatters the accuracy floor by learning the 
+       inductive bias of string theory.
+
+OPTIONS
+       -i, --input <file>
+              (Required) Path to the processed graph dataset.
+              Example: data/smart_graph_50000.pt
+
+       -o, --output <file>
+              (Optional) Path to save the trained Oracle weights.
+              (default: checkpoints/gnn_universe_model.pth)
+
+       -e, --epochs <int>
+              (Optional) Number of training epochs. (default: 100)
+```
+**Example:**
+```bash
+KMP_DUPLICATE_LIB_OK=True python src/training/TrainGraphModel.py -i data/smart_graph_1000.pt -e 150
+```
+
+**6. Consult the Oracle (Inference)**
+Pass an unknown structural universe to the trained GNN and ask it to predict the laws of physics that would emerge from that geometry.
+
+```text
+NAME
+       oracle.py - Forward problem inference engine
+
+SYNOPSIS
+       KMP_DUPLICATE_LIB_OK=True python src/inference/oracle.py -i <input_graph> [OPTIONS]
+
+DESCRIPTION
+       Loads the trained Oracle model and a target geometric graph. The AI performs 
+       a forward pass, analyzing the topological structure to output the predicted 
+       intersection numbers (physical constraints) of that specific manifold without 
+       solving the analytical math.
+
+OPTIONS
+       -i, --input <file>
+              (Required) Path to the single universe graph or dataset to analyze.
+
+       -m, --model <file>
+              (Optional) Path to the trained Oracle model weights. 
+              (default: checkpoints/gnn_universe_model.pth)
+```
+**Example:**
+```bash
+KMP_DUPLICATE_LIB_OK=True python src/inference/oracle.py -i data/smart_graph_50.pt
+```
+
+**7. Train the God Mode CVAE**
 Train the God Mode CVAE (Conditional Variational Autoencoder) to map the continuous probability cloud of the universe landscape.
 
 ```text
@@ -153,11 +220,13 @@ OPTIONS
 
        -b, --batch_size <int>
               (Optional) Batch size for the dataloader. (default: 64)
+```
+**Example:**
 ```bash
 KMP_DUPLICATE_LIB_OK=True python src/training/UniverseGenerator.py -i data/deep_space_1000.pt
 ```
 
-**6. God Mode (Inference)**
+**8. God Mode (Inference)**
 Command the trained CVAE to hallucinate the geometric blueprint of a brand new universe by passing it arbitrary physical laws.
 
 ```text
@@ -183,6 +252,8 @@ OPTIONS
               (Optional) A list of target physical properties you want your 
               custom universe to possess (mapped to intersection numbers).
               (default: 24.0 -12.0 8.0)
+```
+**Example:**
 ```bash
 KMP_DUPLICATE_LIB_OK=True python src/inference/GenerateUniverse.py
 ```
