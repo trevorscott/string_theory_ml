@@ -52,7 +52,7 @@ Before igniting the pipeline, ensure your system has the following installed:
 **1. Clone the Repository**
 To pull this project onto your local machine, open your terminal and run the following command. You can replace `string_theory_test` with whatever you want to name your local folder:
 ```bash
-git clone [https://github.com/YourUsername/string_theory_ml.git](https://github.com/YourUsername/string_theory_ml.git) string_theory_test
+git clone https://github.com/trevorscott/string_theory_ml.git string_theory_test
 cd string_theory_test
 ```
 
