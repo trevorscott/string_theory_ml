@@ -11,7 +11,9 @@ This repository is a local, end-to-end Machine Learning pipeline designed to exp
 
 In string theory, the physics of our 4D reality—from the mass of an electron to the strength of gravity—is dictated by the geometry of 6 extra, invisible dimensions curled up into Calabi-Yau manifolds. With an estimated $10^{500}$ possible shapes, finding the one that matches our universe is fundamentally a Big Data problem.
 
-This project bridges theoretical physics and deep learning. It automates the harvesting of multi-dimensional geometric scaffolds, translates their topology into Graph Neural Networks (GNNs), and deploys Generative AI to reverse-engineer universes based on targeted physical laws.
+This project bridges theoretical physics and deep learning. It automates the harvesting of multi-dimensional geometric scaffolds and translates their topology into Graph Neural Networks (GNNs). The pipeline features a dual-engine architecture:
+1. **The Oracle (`BottNet`):** A predictive model that organically deduces the physical laws (intersection numbers) of existing universes directly from their structural geometry.
+2. **God Mode (CVAE):** A generative engine that reverse-engineers novel Calabi-Yau manifolds based on user-targeted physical parameters.
 
 ## Pipeline Architecture
 The codebase is structured into a four-stage experimental pipeline:
