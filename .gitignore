@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Ignore ML Data and Model Weights
+*.pt
+*.pth
+*.sh
+.DS_Store
+__pycache__/
