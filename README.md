@@ -2,6 +2,10 @@
 
 *“There are two ways to do great mathematics. The first is to be smarter than everybody else. The second way is to be stupider than everybody else — but persistent.” — Raoul Bott*
 
+Or...
+
+Be stupider & just use AI.
+
 ## Overview
 This repository is a local, end-to-end Machine Learning pipeline designed to explore the structural DNA of the universe. 
 
