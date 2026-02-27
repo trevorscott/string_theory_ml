@@ -161,7 +161,10 @@ OPTIONS
               (default: checkpoints/gnn_universe_model.pth)
 
        -e, --epochs <int>
-              (Optional) Number of training epochs. (default: 100)
+              (Optional) Number of training epochs. (default: 150)
+
+       -b, --batch_size <int>
+              (Optional) Batch size for the dataloader. (default: 32)
 ```
 **Example:**
 ```bash
