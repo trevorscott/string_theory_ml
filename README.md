@@ -41,14 +41,29 @@ This pipeline acts as the ultimate filter. By using AI to master the topology an
 
 *Note: Due to GitHub file size limits, the `data/` (.pt) and `checkpoints/` (.pth) directories are ignored. You must run the Harvesters locally to generate the raw universe datasets.*
 
-**1. Initialize the Environment**
+## Prerequisites
+Before igniting the pipeline, ensure your system has the following installed:
+* **Git**: To clone the repository.
+* **Conda / Mamba** (or **uv**): For strict environment and dependency management.
+* **Python 3.10+**
+* **cytools**: The foundational backend for Calabi-Yau algebraic geometry.
+* **PyTorch**: The engine for the Graph Neural Networks and Generative models.
+
+**1. Clone the Repository**
+To pull this project onto your local machine, open your terminal and run the following command. You can replace `string_theory_test` with whatever you want to name your local folder:
+```bash
+git clone [https://github.com/YourUsername/string_theory_ml.git](https://github.com/YourUsername/string_theory_ml.git) string_theory_test
+cd string_theory_test
+```
+
+**2. Initialize the Environment**
 This project requires `cytools` (best installed via conda/mamba) and PyTorch. If you are using `uv` for dependency management (as configured in the `pyproject.toml` and `uv.lock`), sync your environment:
 
 ```bash
 conda activate cytools
 uv sync
 ```
-**2. Harvest the Multiverse**
+**3. Harvest the Multiverse**
 Mine the $h^{1,1}=10$ landscape for stable Calabi-Yau manifolds.
 (Note: Mac users might need use the KMP_DUPLICATE_LIB_OK=True override to prevent OpenMP library conflicts during heavy combinatorial math).
 
@@ -56,19 +71,19 @@ Mine the $h^{1,1}=10$ landscape for stable Calabi-Yau manifolds.
 KMP_DUPLICATE_LIB_OK=True python src/harvesting/DeepSpaceHarvester.py
 ```
 
-**3. Process the Topology into Graphs**
+**4. Process the Topology into Graphs**
 Strip the raw geometry of arbitrary identifiers and weave it into 3D Graph structures for the neural network.
 ```bash 
 KMP_DUPLICATE_LIB_OK=True python src/processing/SmartGraphBuilder.py
 ```
 
-**4. Train the Models**
+**5. Train the Models**
 Train the God Mode CVAE (Conditional Variational Autoencoder) to map the continuous probability cloud of the universes.
 ```bash
 KMP_DUPLICATE_LIB_OK=True python src/training/UniverseGenerator.py
 ```
 
-**5. God Mode (Inference)**
+**6. God Mode (Inference)**
 Command the trained CVAE to hallucinate a brand new universe by passing it arbitrary physical laws.
 ```bash
 KMP_DUPLICATE_LIB_OK=True python src/inference/GenerateUniverse.py
