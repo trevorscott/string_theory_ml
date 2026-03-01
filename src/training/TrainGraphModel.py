@@ -63,8 +63,6 @@ if __name__ == "__main__":
                         help="Training batch size (default: 32)")
     
     args = parser.parse_args()
-
-    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
     
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     print(f"🚀 Igniting Graph Training on: {device}")

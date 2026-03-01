@@ -3,7 +3,6 @@ import numpy as np
 from cytools import fetch_polytopes
 import os
 
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 target_size = 5000
 print(f"🚜 Starting the Quota Harvester (Target: {target_size} universes)...")

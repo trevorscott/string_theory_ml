@@ -41,7 +41,7 @@ if __name__ == "__main__":
     else:
         output_file = args.output
 
-    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+    
     print("🧠 Waking up the Smart Topological Weaver...")
     print(f"📥 Loading raw universes from: {input_file}")
     

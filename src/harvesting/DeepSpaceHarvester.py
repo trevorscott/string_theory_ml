@@ -16,7 +16,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     target_size = args.universes
 
-    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
     print(f"🌌 Launching MASSIVE Deep Space Harvest (Target: {target_size} universes)...")
 
     # Estimate scaffolds needed (assuming a conservative ~10 valid universes per scaffold)

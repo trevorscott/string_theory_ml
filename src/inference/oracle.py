@@ -47,7 +47,7 @@ if __name__ == "__main__":
                         help="Path to the trained Oracle model weights.")
     
     args = parser.parse_args()
-    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+
 
     # 4. Safety Checks
     if not os.path.exists(args.input):

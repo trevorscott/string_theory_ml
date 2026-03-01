@@ -3,8 +3,6 @@ import numpy as np
 from cytools import fetch_polytopes
 import os
 
-# 1. Environment Fix
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
 # Tell Torch that NumPy scalars are 'safe' for loading
 torch.serialization.add_safe_globals([np.core.multiarray.scalar])
 

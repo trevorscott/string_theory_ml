@@ -65,12 +65,25 @@ cd string_theory_test
 ```
 
 **2. Initialize the Environment**
-This project requires `cytools` (best installed via conda/mamba) and PyTorch. If you are using `uv` for dependency management (as configured in the `pyproject.toml` and `uv.lock`), sync your environment:
+Because `string_theory_ml` relies heavily on `cytools` and its underlying C++ algebraic geometry libraries, a Conda environment is required as the base. 
+
+**⚠️ Important macOS / OpenMP Note:** To prevent OpenMP thread contention and segmentation faults between PyTorch and Conda's default Intel Math Kernel Library (`mkl`), we explicitly use `nomkl`. Do *not* use the `KMP_DUPLICATE_LIB_OK=True` workaround, as it will silently bottleneck your CPU threads during training.
 
 ```bash
-conda activate cytools
+# 1. Create and activate the base conda environment
+conda create -n string_theory_ml python=3.10
+conda activate string_theory_ml
+
+# 2. Install CYTools (Conda is required here)
+conda install -c conda-forge cytools 
+
+# 3. Force Conda to drop Intel MKL dependencies, then cleanly install PyTorch
+conda install nomkl
+conda install pytorch torchvision torchaudio -c pytorch
+
+# 4. Sync the remaining Python dependencies using uv
 uv sync
-```
+
 
 **3. Harvest the Multiverse**
 Mine the $h^{1,1}=10$ landscape for mathematically stable Calabi-Yau manifolds. 
@@ -80,15 +93,12 @@ NAME
        DeepSpaceHarvester.py - Automated string theory landscape miner
 
 SYNOPSIS
-       KMP_DUPLICATE_LIB_OK=True python src/harvesting/DeepSpaceHarvester.py [OPTIONS]
+       python src/harvesting/DeepSpaceHarvester.py [OPTIONS]
 
 DESCRIPTION
        Downloads complex topological scaffolds and calculates random triangulations 
        to find mathematically stable universes. Automatically bypasses non-viable 
        geometries and saves the exact structural matrices to the data/ directory.
-       
-       Note: Mac users must prepend KMP_DUPLICATE_LIB_OK=True to prevent OpenMP 
-       library collisions during heavy combinatorial math.
 
 OPTIONS
        -u, --universes <int>
@@ -99,7 +109,7 @@ OPTIONS
 ```
 **Example:**
 ```bash
-KMP_DUPLICATE_LIB_OK=True python src/harvesting/DeepSpaceHarvester.py
+python src/harvesting/DeepSpaceHarvester.py
 ```
 
 **4. Process the Topology into Graphs**
@@ -110,15 +120,12 @@ NAME
        SmartGraphBuilder.py - Topological graph dataset processor
 
 SYNOPSIS
-       KMP_DUPLICATE_LIB_OK=True python src/processing/SmartGraphBuilder.py -i <input_file> [OPTIONS]
+       python src/processing/SmartGraphBuilder.py -i <input_file> [OPTIONS]
 
 DESCRIPTION
        Loads raw geometric simplices from the harvester and translates them into 
        undirected mathematical graphs. This strips away arbitrary vertex identifiers 
        and forces the AI to learn pure spatial and topological relationships.
-
-       Note: Mac users must prepend KMP_DUPLICATE_LIB_OK=True to prevent OpenMP 
-       library collisions.
 
 OPTIONS
        -i, --input <file>
@@ -132,7 +139,7 @@ OPTIONS
 ```
 **Example:**
 ```bash 
-KMP_DUPLICATE_LIB_OK=True python src/processing/SmartGraphBuilder.py -i data/deep_space_1000.pt
+python src/processing/SmartGraphBuilder.py -i data/deep_space_1000.pt
 ```
 
 **5. Train the Oracle (The Forward Problem)**
@@ -143,7 +150,7 @@ NAME
        TrainGraphModel.py - Train the Predictive Physics Oracle
 
 SYNOPSIS
-       KMP_DUPLICATE_LIB_OK=True python src/training/TrainGraphModel.py -i <input_file> [OPTIONS]
+    python src/training/TrainGraphModel.py -i <input_file> [OPTIONS]
 
 DESCRIPTION
        Loads the processed 3D Graph datasets and trains a neural network to predict 
@@ -168,7 +175,7 @@ OPTIONS
 ```
 **Example:**
 ```bash
-KMP_DUPLICATE_LIB_OK=True python src/training/TrainGraphModel.py -i data/smart_graph_1000.pt -e 150
+python src/training/TrainGraphModel.py -i data/smart_graph_1000.pt -e 150
 ```
 
 **6. Consult the Oracle (Inference)**
@@ -179,7 +186,7 @@ NAME
        oracle.py - Forward problem inference engine
 
 SYNOPSIS
-       KMP_DUPLICATE_LIB_OK=True python src/inference/oracle.py -i <input_graph> [OPTIONS]
+       python src/inference/oracle.py -i <input_graph> [OPTIONS]
 
 DESCRIPTION
        Loads the trained Oracle model and a target geometric graph. The AI performs 
@@ -197,7 +204,7 @@ OPTIONS
 ```
 **Example:**
 ```bash
-KMP_DUPLICATE_LIB_OK=True python src/inference/oracle.py -i data/smart_graph_50.pt
+python src/inference/oracle.py -i data/smart_graph_50.pt
 ```
 
 **7. Train the God Mode CVAE**
@@ -208,7 +215,7 @@ NAME
        UniverseGenerator.py - Train the Generative Universe Model
 
 SYNOPSIS
-       KMP_DUPLICATE_LIB_OK=True python src/training/UniverseGenerator.py -i <input_file> [OPTIONS]
+       python src/training/UniverseGenerator.py -i <input_file> [OPTIONS]
 
 DESCRIPTION
        Loads the raw harvested dataset and trains a Conditional Variational Autoencoder. 
@@ -232,7 +239,7 @@ OPTIONS
 ```
 **Example:**
 ```bash
-KMP_DUPLICATE_LIB_OK=True python src/training/UniverseGenerator.py -i data/deep_space_1000.pt
+python src/training/UniverseGenerator.py -i data/deep_space_1000.pt
 ```
 
 **8. God Mode (Inference)**
@@ -243,7 +250,7 @@ NAME
        GenerateUniverse.py - The Inverse Problem solver
 
 SYNOPSIS
-       KMP_DUPLICATE_LIB_OK=True python src/inference/GenerateUniverse.py [OPTIONS]
+       python src/inference/GenerateUniverse.py [OPTIONS]
 
 DESCRIPTION
        Loads the trained Generative God-Mode model and a random latent vector, 
@@ -264,5 +271,5 @@ OPTIONS
 ```
 **Example:**
 ```bash
-KMP_DUPLICATE_LIB_OK=True python src/inference/GenerateUniverse.py
+python src/inference/GenerateUniverse.py
 ```

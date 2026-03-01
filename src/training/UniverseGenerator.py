@@ -67,7 +67,6 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
     print("🌌 Igniting the God Mode CVAE Engine...")
 
     if not os.path.exists(args.input):
@@ -155,4 +154,4 @@ if __name__ == "__main__":
     print("✅ GOD MODE ENGINE SAVED")
     print(f"Weights written to: {args.output}")
     print("We are ready to generate custom reality.")
-    print("="*50)
+    print("="*50)   

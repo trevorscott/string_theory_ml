@@ -37,8 +37,6 @@ if __name__ == "__main__":
                         help="A list of target physical properties (e.g., -p 24.0 -12.0 8.0)")
     
     args = parser.parse_args()
-
-    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
     
     if not os.path.exists(args.model):
         print(f"❌ Error: Model checkpoint '{args.model}' not found. Did you train it yet?")

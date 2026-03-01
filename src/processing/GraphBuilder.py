@@ -3,7 +3,6 @@ import numpy as np
 from torch_geometric.data import Data
 import os
 
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
 torch.serialization.add_safe_globals([np.core.multiarray.scalar])
 
 print("🕸️  Waking up the Topological Weaver...")
