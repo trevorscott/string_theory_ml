@@ -24,7 +24,7 @@ This repo walks you through three things:
 
 String theory says the physics of our universe — particle masses, force strengths, everything — is determined by the shape of 6 extra dimensions curled up at every point in space. These shapes are called **Calabi-Yau manifolds**.
 
-There are an estimated 10^500 possible shapes. Finding the one that matches our universe is a needle-in-a-haystack problem. This pipeline uses machine learning to:
+There are an estimated 10^500 possible shapes. Finding the one that matches our universe is a needle-in-a-haystack problem. This pipeline uses modern tools & machine learning to:
 
 - **Filter** the landscape for physically motivated candidates
 - **Predict** topological properties (the "DNA" of a shape) using GNNs instead of impossible analytical math
