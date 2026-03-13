@@ -22,8 +22,12 @@ if __name__ == "__main__":
     )
     parser.add_argument('-u', '--universes', type=int, default=10000,
                         help="Target number of valid universes to harvest (default: 10000)")
-    parser.add_argument('--h11_samples', type=int, default=100,
-                        help="Number of h11 values to sample across KS range (default: 100)")
+    parser.add_argument('--h11_min', type=int, default=KS_H11_MIN,
+                        help=f"Minimum h11 value to scan (default: {KS_H11_MIN})")
+    parser.add_argument('--h11_max', type=int, default=KS_H11_MAX,
+                        help=f"Maximum h11 value to scan (default: {KS_H11_MAX})")
+    parser.add_argument('--h11_samples', type=int, default=None,
+                        help="Number of h11 values to sample across range. If not set, uses full range.")
     parser.add_argument('--scaffolds_per_h11', type=int, default=200,
                         help="Max polytopes to fetch per h11 value (default: 200)")
     parser.add_argument('--triangulations_per_scaffold', type=int, default=500,
@@ -38,14 +42,24 @@ if __name__ == "__main__":
     args = parser.parse_args()
     target_size = args.universes
 
-    # Reproducible sampling across the full KS landscape
+    # Validate h11 range
+    if args.h11_min > args.h11_max:
+        raise ValueError(f"h11_min ({args.h11_min}) must be <= h11_max ({args.h11_max})")
+
+    # Build h11 values list — either full range or random sample within range
     random.seed(args.seed)
-    h11_values = sorted(random.sample(range(KS_H11_MIN, KS_H11_MAX + 1), k=args.h11_samples))
+    full_range = list(range(args.h11_min, args.h11_max + 1))
+
+    if args.h11_samples is not None and args.h11_samples < len(full_range):
+        h11_values = sorted(random.sample(full_range, k=args.h11_samples))
+        sampling_desc = f"Sampling {args.h11_samples} h11 values from range [{args.h11_min}, {args.h11_max}]"
+    else:
+        h11_values = full_range
+        sampling_desc = f"Scanning full h11 range [{args.h11_min}, {args.h11_max}] ({len(h11_values)} values)"
 
     print(f"🌌 Launching Standard Model Harvest (Target: {target_size} universes)")
     print(f"📐 Constraint: |h11 - h21| = 3 (3 particle generations, χ = ±6)")
-    print(f"🔭 Sampling {args.h11_samples} h11 values uniformly across KS range [{KS_H11_MIN}, {KS_H11_MAX}]")
-    print(f"📊 h11 sample: {h11_values[:10]}... (seed={args.seed})")
+    print(f"🔭 {sampling_desc}")
 
     # Resume from checkpoint if provided
     universal_dataset = []
@@ -59,7 +73,7 @@ if __name__ == "__main__":
     failed_math_count = 0
     total_scaffolds_scanned = 0
     total_scaffolds_used = 0
-    hodge_distribution = {}  # Track diversity of Hodge pairs harvested
+    hodge_distribution = {}
 
     print(f"\n{'='*50}")
 
@@ -70,12 +84,8 @@ if __name__ == "__main__":
         print(f"\n--- Scanning h11={h11_val} ({h11_values.index(h11_val)+1}/{len(h11_values)}) ---")
 
         try:
-            polys = fetch_polytopes(
-                h11=h11_val,
-                lattice="N",
-                limit=args.scaffolds_per_h11,
-                as_list=True
-            )
+            fetch_kwargs = {"h11": h11_val, "as_list": True, "limit": args.scaffolds_per_h11}
+            polys = fetch_polytopes(**fetch_kwargs)
         except Exception as e:
             print(f"  ⚠️  Could not fetch h11={h11_val}: {e}")
             continue
@@ -129,7 +139,6 @@ if __name__ == "__main__":
                         valid_from_this_shape += 1
                         hodge_distribution[hodge_key] += 1
 
-                        # Checkpoint saving
                         if len(universal_dataset) % args.checkpoint_interval == 0:
                             print(f"   📈 PROGRESS: {len(universal_dataset)} / {target_size} universes secured...")
                             save_checkpoint(universal_dataset, checkpoint_path)
@@ -151,7 +160,6 @@ if __name__ == "__main__":
     output_filename = f"data/standard_model_{len(universal_dataset)}.pt"
     torch.save(universal_dataset, output_filename)
 
-    # Clean up checkpoint if we finished successfully
     if len(universal_dataset) >= target_size and os.path.exists(checkpoint_path):
         os.remove(checkpoint_path)
         print(f"🧹 Checkpoint cleaned up (harvest complete).")
