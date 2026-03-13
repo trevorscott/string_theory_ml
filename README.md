@@ -34,13 +34,13 @@ There are an estimated 10^500 possible shapes. Finding the one that matches our 
 
 ## The Standard Model Filter
 
-Unlike most prior work that samples the landscape arbitrarily, this pipeline filters for **physically motivated candidates**. Our universe has 3 generations of matter particles (electron/muon/tau, up/charm/top, etc.), which in string theory corresponds to an Euler characteristic of ±6:
+This pipeline filters for **manifold candidates with physics that matches our universe**. Our universe has 3 generations of matter particles (electron/muon/tau, up/charm/top, etc.), which in string theory corresponds to an Euler characteristic of ±6:
 
 ```
 |h¹·¹ - h²·¹| = 3   →   χ = ±6
 ```
 
-Scanning the Kreuzer-Skarke database for this constraint yields a small, focused dataset of Standard Model candidate universes — the geometries that could plausibly describe the hidden dimensions of *our* universe.
+Scanning the Kreuzer-Skarke database for this constraint yields a focused dataset of Standard Model candidate universes — the geometries that could plausibly describe the hidden dimensions of *our* universe.
 
 ---
 
@@ -240,6 +240,6 @@ If you're interested in contributing to the next phase, open an issue or reach o
 
 ## About
 
-Built by [Trevor Scott](https://github.com/trevorscott), inspired by the work of [Raoul Bott](https://en.wikipedia.org/wiki/Raoul_Bott).
+Built by [Trevor Scott](https://github.com/trevorscott), inspired by the work of his grandfather [Raoul Bott](https://en.wikipedia.org/wiki/Raoul_Bott).
 
 *Be persistent.*
