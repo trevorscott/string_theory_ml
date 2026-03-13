@@ -1,180 +1,245 @@
-# 🌌 String Theory ML: Mapping the Calabi-Yau Landscape
+# 🌌 String Theory ML
 
-*“There are two ways to do great mathematics. The first is to be smarter than everybody else. The second way is to be stupider than everybody else — but persistent.” — Raoul Bott*
+*"There are two ways to do great mathematics. The first is to be smarter than everybody else. The second way is to be stupider than everybody else — but persistent." — Raoul Bott*
 
-Or...
+An end-to-end machine learning pipeline for exploring the string theory landscape — built for engineers and curious minds, not just physicists.
 
-Be stupider & just use AI.
+---
 
-## Overview
-This repository is a local, end-to-end Machine Learning pipeline designed to explore the structural DNA of the universe. 
+## What Is This?
 
-In string theory, the physics of our 4D reality—from the mass of an electron to the strength of gravity—is dictated by the geometry of 6 extra, invisible dimensions curled up into Calabi-Yau manifolds. With an estimated $10^{500}$ possible shapes, finding the one that matches our universe is fundamentally a Big Data problem.
+This is an **educational and exploratory** project that bridges theoretical physics and deep learning. It is not a research paper. It's a working pipeline that lets any engineer with a laptop mine the mathematical landscape of string theory, train neural networks on the geometry of hidden dimensions, and explore what it would take to reverse-engineer the shape of our universe.
 
-This project bridges theoretical physics and deep learning. It automates the harvesting of multi-dimensional geometric scaffolds from the Kreuzer-Skarke database and translates their topology into Graph Neural Networks (GNNs). 
+If you want the full story — why string theory needs ML, what Calabi-Yau manifolds are, and how this connects to the search for a Theory of Everything — read the companion article: **[The First Step to Solving the Universe: AI, Topology, and String Theory](https://medium.com/@marquan03)**.
 
-The repository is structured as a **"living history" monorepo**, tracking the evolution from standard continuous generative models (V1) to state-of-the-art discrete denoising architectures (V2).
+This repo walks you through three things:
 
-## Pipeline Architecture
-The codebase is structured into four experimental stages:
+1. **Mining the multiverse** — Harvesting thousands of mathematically valid Calabi-Yau manifolds from the Kreuzer-Skarke database, filtered for Standard Model compatibility
+2. **Teaching AI to read geometry** — Training a Graph Neural Network to predict the physical laws (intersection numbers) of a universe from its structural blueprint
+3. **Dreaming new universes** — Using a generative diffusion model to attempt the inverse problem: given target physics, generate geometry
 
-### 1. ⛏️ Harvesting (`src/harvesting/`)
-* **Objective:** Mine the string theory landscape for mathematically stable universes.
-* **Mechanism:** Uses combinatorial C++ backends to shatter complex $h^{1,1}$ scaffolds, extracting the precise matrices of simplices that form the structural boundaries of Calabi-Yau spaces. Put simply, the $h^{1,1}$ scaffold represents the overarching blueprint and complexity of the extra dimensions, while the "simplices" are the fundamental, indivisible building blocks (like high-dimensional triangles or Lego bricks) that connect together to build the final shape. 
+---
 
-### 2. 🧬 Processing (`src/processing/`)
-* **Objective:** Translate discrete geometry into machine-readable mathematical formats.
-* **Mechanism:** Strips arbitrary vertex identifiers and maps the continuous manifolds into 3D Graph structures and Tensor datasets, ensuring the AI learns pure spatial relationships rather than memorizing noise.
+## The Big Idea (60-Second Version)
 
-### 3. 🧠 V1: The Continuous Trap (`architectures/v1_cvae/`)
-* **Objective:** Solve the "Inverse Problem" using a Conditional Variational Autoencoder (CVAE).
-* **The Architecture:** Takes target physical laws as input, samples a continuous probability cloud, and hallucinates a geometric matrix.
-* **The Wall:** Standard VAEs output continuous probabilities (e.g., an edge exists at a 0.87 probability). But Calabi-Yau manifolds are perfectly rigid, discrete topological structures. Attempting to round these probabilities to 0 or 1 destroys the gradients and collapses the physics math. V1 remains in the repo as a foundational stepping stone.
+String theory says the physics of our universe — particle masses, force strengths, everything — is determined by the shape of 6 extra dimensions curled up at every point in space. These shapes are called **Calabi-Yau manifolds**.
 
-### 4. ⚡ V2: Discrete Graph Diffusion (`architectures/v2_diffusion/`)
-* **Objective:** The State-of-the-Art solution for discrete manifold generation.
-* **The Architecture:** Abandons continuous Gaussian noise. Instead, it uses a Markov Transition Matrix to violently corrupt perfect Calabi-Yau matrices into binary noise, bit by bit. A `DenseGCNConv` Graph Neural Network is then trained to natively reverse the entropy. 
-* **The Result:** The model organically learns the inductive bias of string theory geometry, outputting mathematically pure, rigid matrices natively on Apple Silicon (MPS) or CUDA.
+There are an estimated 10^500 possible shapes. Finding the one that matches our universe is a needle-in-a-haystack problem. This pipeline uses machine learning to:
 
-## The Math and the Mission
-To find the master equation of reality, we must separate **Topology** (the squishy, invariant capacity for physics) from the **Metric** (the continuous, rigid geometry required to calculate exact particle masses). Finding the metric requires solving the non-linear Monge-Ampère equation—a task impossible for modern supercomputers to do blindly.
+- **Filter** the landscape for physically motivated candidates
+- **Predict** topological properties (the "DNA" of a shape) using GNNs instead of impossible analytical math
+- **Generate** new candidate geometries using diffusion models
 
-This pipeline acts as the ultimate filter. By using AI to master the topology and throw away the wrong universes, we are building the target list for the fault-tolerant quantum computers of the future. 
+---
+
+## The Standard Model Filter
+
+Unlike most prior work that samples the landscape arbitrarily, this pipeline filters for **physically motivated candidates**. Our universe has 3 generations of matter particles (electron/muon/tau, up/charm/top, etc.), which in string theory corresponds to an Euler characteristic of ±6:
+
+```
+|h¹·¹ - h²·¹| = 3   →   χ = ±6
+```
+
+Scanning the Kreuzer-Skarke database for this constraint yields a small, focused dataset of Standard Model candidate universes — the geometries that could plausibly describe the hidden dimensions of *our* universe.
 
 ---
 
 ## Prerequisites
-Before igniting the pipeline, ensure your system has the following installed:
-* **Git**: To clone the repository.
-* **Conda / Mamba** (or **uv**): For strict environment and dependency management.
-* **Python 3.10+**
-* **cytools**: The foundational backend for Calabi-Yau algebraic geometry.
-* **PyTorch & PyTorch Geometric**: The engines for the Graph Neural Networks.
 
-## Setup & Execution
+- **Git**
+- **Conda or Mamba** — Required for CYTools and its C++ algebraic geometry backends
+- **Python 3.11** (3.12+ has compatibility issues with CYTools on Apple Silicon)
+- **uv** — For remaining Python dependency management
 
-*Note: Due to GitHub file size limits, the `data/` (.pt) and `checkpoints/` (.pth) directories are ignored. You must run the Harvesters locally to generate the raw universe datasets.*
+## Setup
 
-**1. Clone the Repository**
 ```bash
+# 1. Clone
 git clone https://github.com/trevorscott/string_theory_ml.git
 cd string_theory_ml
-```
 
-**2. Initialize the Environment**
-Because `string_theory_ml` relies heavily on `cytools` and its underlying C++ algebraic geometry libraries, a Conda environment is required as the base. 
-
-**⚠️ Important macOS / OpenMP Note:** To prevent OpenMP thread contention and segmentation faults between PyTorch and Conda's default Intel Math Kernel Library (`mkl`), we explicitly use `nomkl`. Do *not* use the `KMP_DUPLICATE_LIB_OK=True` workaround, as it will silently bottleneck your CPU threads during training.
-
-```bash
-# 1. Create and activate the base conda environment
-conda create -n string_theory_ml python=3.10
+# 2. Create environment
+conda create -n string_theory_ml python=3.11
 conda activate string_theory_ml
 
-# 2. Install CYTools (Conda is required here)
-conda install -c conda-forge cytools 
+# 3. Install CYTools (requires Conda — this pulls in C++ backends)
+conda install -c conda-forge cytools
 
-# 3. Force Conda to drop Intel MKL dependencies, then cleanly install PyTorch
+# 4. Prevent OpenMP/MKL thread conflicts (important on macOS)
 conda install nomkl
-conda install pytorch torchvision torchaudio -c pytorch
+conda install pytorch -c pytorch
 
-# 4. Sync the remaining Python dependencies using uv
+# 5. Install remaining Python dependencies
 uv sync
 ```
 
-**3. Harvest the Multiverse**
-Mine the $h^{1,1}=10$ landscape for mathematically stable Calabi-Yau manifolds. 
+> ⚠️ **macOS Note:** Do *not* use `KMP_DUPLICATE_LIB_OK=True` as a workaround for OpenMP segfaults. The `nomkl` install above is the correct fix — it prevents Intel MKL from silently bottlenecking your CPU threads during training.
 
-```text
-NAME
-       DeepSpaceHarvester.py - Automated string theory landscape miner
+---
 
-SYNOPSIS
-       python src/harvesting/DeepSpaceHarvester.py [OPTIONS]
+## Walkthrough
 
-DESCRIPTION
-       Downloads complex topological scaffolds and calculates random triangulations 
-       to find mathematically stable universes. Automatically bypasses non-viable 
-       geometries and saves the exact structural matrices to the data/ directory.
+The pipeline has three stages. Each builds on the output of the previous one.
 
-OPTIONS
-       -u, --universes <int>
-              The exact number of valid universes to harvest. (default: 1000)
-```
-**Example:**
+### Stage 1: Mine the Multiverse
+
+The harvester downloads polytope scaffolds from the Kreuzer-Skarke database, generates random triangulations via CYTools' C++ backend, and filters for Calabi-Yau manifolds that satisfy the Standard Model constraint (`|h¹·¹ - h²·¹| = 3`). For each valid manifold, it extracts the simplicial complex (the discrete structural skeleton) and the intersection numbers (the physics).
+
 ```bash
-python src/harvesting/DeepSpaceHarvester.py -u 10000
+# Harvest 50 Standard Model candidate universes (quick test)
+python src/harvesting/DeepSpaceHarvester.py -u 50
+
+# Full harvest — this takes a while
+python src/harvesting/DeepSpaceHarvester.py -u 5000
 ```
 
-**4. Process the Topology into Graphs (Required for V1)**
-Strip the raw geometry of arbitrary identifiers and weave it into 3D Graph structures.
+**Output:** `data/standard_model_N.pt` — a list of dictionaries, each containing:
+- `X_simplices` — the simplicial complex (list of vertex tuples forming the structural skeleton)
+- `Y_physics` — the intersection numbers (the target physical properties)
+- `h11`, `h21`, `euler` — the Hodge numbers and Euler characteristic
 
-```text
-NAME
-       SmartGraphBuilder.py - Topological graph dataset processor
+> **Note:** Data files are not committed to the repo (they exceed GitHub's size limits). You must run the harvester locally to generate them.
 
-SYNOPSIS
-       python src/processing/SmartGraphBuilder.py -i <input_file> [OPTIONS]
+### Stage 2: Train the Oracle (Forward Problem)
+
+*"Given a geometry, what are the physics?"*
+
+This is the forward problem. We train a Graph Neural Network (BottNet) to predict the intersection numbers of a manifold directly from its simplicial geometry — bypassing the analytically impossible math that would otherwise be required.
+
+**Step 2a: Convert raw geometry into graphs**
+
+The `SmartGraphBuilder` takes the raw simplicial complexes from the harvester and translates them into PyTorch Geometric graph objects. It strips arbitrary vertex identifiers and computes topological node features, forcing the model to learn pure spatial relationships rather than memorized indices.
+
+```bash
+python src/processing/SmartGraphBuilder.py -i data/standard_model_50.pt
 ```
-**Example:**
-```bash 
-python src/processing/SmartGraphBuilder.py -i data/deep_space_1000.pt
+
+**Output:** `data/smart_graph_standard_model_50.pt`
+
+**Step 2b: Train BottNet**
+
+```bash
+python architectures/v1_cvae/training/TrainGraphModel.py -i data/smart_graph_standard_model_50.pt -e 150 -b 32
+```
+
+**Output:** `checkpoints/gnn_universe_model.pth`
+
+**Step 2c: Run inference**
+
+Pass an unknown manifold to the trained Oracle and ask it to predict the physics:
+
+```bash
+python architectures/v1_cvae/inference/oracle.py -i data/smart_graph_standard_model_50.pt
+```
+
+This prints predicted vs. actual intersection numbers for a sample of universes in the dataset.
+
+### Stage 3: The Dreamer (Inverse Problem)
+
+*"Given target physics, what is the geometry?"*
+
+This is the hard problem — and the frontier. Instead of asking "what physics does this shape produce?", we ask "what shape produces *these* physics?"
+
+The Dreamer is a diffusion model that learns the distribution of valid Calabi-Yau adjacency matrices and attempts to generate new ones from noise.
+
+> ⚠️ **Important:** The diffusion model takes **raw harvester output** (`standard_model_*.pt`), *not* the SmartGraphBuilder output. It builds its own adjacency matrix representation internally.
+
+**Step 3a: Train the diffusion model**
+
+```bash
+python -m architectures.v2_diffusion.train -f data/standard_model_50.pt -e 50 -b 32
+```
+
+**Output:** `checkpoints/v2_diffusion_model.pth`
+
+**Step 3b: Generate universes**
+
+```bash
+python -m architectures.v2_diffusion.validate -m checkpoints/v2_diffusion_model.pth -s 20
+```
+
+This generates candidate adjacency matrices and (if CYTools is available) validates whether they correspond to real Calabi-Yau manifolds.
+
+---
+
+## Pipeline Architecture
+
+The pipeline branches after harvesting — don't mix inputs between the two paths:
+
+```
+src/harvesting/DeepSpaceHarvester.py
+              │
+              ▼
+     standard_model_N.pt  (raw harvested manifolds)
+              │
+    ┌─────────┴─────────────────────────────────┐
+    │                                            │
+    ▼                                            ▼
+src/processing/                     architectures/v2_diffusion/
+SmartGraphBuilder.py                train.py
+    │                               (builds adjacency matrices
+    ▼                                from raw simplices internally)
+smart_graph_standard_model_N.pt              │
+    │                                        ▼
+    ├──→ architectures/v1_cvae/     architectures/v2_diffusion/
+    │    training/TrainGraphModel.py validate.py
+    │         │                     (generate + validate)
+    │         ▼
+    └──→ architectures/v1_cvae/
+         inference/oracle.py
 ```
 
 ---
 
-### 🚀 Training V2: Discrete Graph Diffusion (State-of-the-Art)
-Bypass the continuous rounding trap and train the native discrete denoising architecture.
+## The Continuous vs. Discrete Trap
 
-```text
-NAME
-       train.py - Discrete Graph Diffusion Engine
+A key finding from building this pipeline: continuous generative models (VAEs, vanilla Gaussian diffusion) **cannot natively produce valid discrete topology**.
 
-SYNOPSIS
-       python -m architectures.v2_diffusion.train -f <input_file> [OPTIONS]
+Calabi-Yau adjacency matrices are binary — a structural connection either exists (1) or it doesn't (0). When a continuous neural network outputs a fractional value like 0.87, the mathematical wireframe can't snap together. The simulated universes collapse.
 
-DESCRIPTION
-       Loads raw harvested universes and dynamically translates them into padded 
-       adjacency matrices. Corrupts the structures using a Markov Transition Matrix 
-       and trains a DenseGCNConv Graph Neural Network to reverse the entropy, 
-       learning the rigid rules of topological physics. Natively supports MPS/CUDA.
+Think of it like trying to build a Lego set out of Play-Doh. The AI wants to output smooth, continuous values, but the underlying structure demands discrete, integer-valued geometry.
 
-OPTIONS
-       -f, --file <str>
-              (Required) Path to the raw harvested .pt dataset.
-
-       -e, --epochs <int>
-              (Optional) Number of training epochs. (default: 50)
-
-       -b, --batch_size <int>
-              (Optional) Batch size for the dataloader. (default: 32)
-```
-**Example:**
-```bash
-python -m architectures.v2_diffusion.train -f data/deep_space_1000.pt -e 50
-```
+This is an active area of research in geometric deep learning. The current diffusion implementation here uses binary noise corruption as a step in the right direction, but state-of-the-art approaches like [DiGress](https://arxiv.org/abs/2209.14734) (discrete denoising diffusion for graphs) and [Cometh](https://openreview.net/forum?id=nuN1mRrrjX) (continuous-time discrete-state graph diffusion) represent the frontier for this class of problem.
 
 ---
 
-### 🏛️ V1 Legacy: The Continuous CVAE 
-*(For historical reference on the continuous-to-discrete gradient trap)*
+## What's Next
 
-**Train the Predictive Oracle**
-```bash
-python architectures/v1_cvae/training/TrainGraphModel.py -i data/smart_graph_1000.pt -e 150
-```
+This repo is the educational foundation. A next-generation pipeline is in development that incorporates:
 
-**Consult the Oracle (Forward Inference)**
-```bash
-python architectures/v1_cvae/inference/oracle.py -i data/smart_graph_50.pt
-```
+- **True discrete graph diffusion** — A DiGress/Cometh-style noise model that operates in binary space natively, with a marginal-preserving Markov chain
+- **Graph transformer backbone** — Replacing message-passing GNNs with full O(n²) attention, enabling the model to capture global topological properties like "holes" in the manifold
+- **Spectral and structural features** — Laplacian eigenvectors and random walk encodings injected at each denoising step
+- **Classifier-free guidance** — Conditioning generation on target Hodge numbers without a separate classifier
 
-**Train the God Mode CVAE**
-```bash
-python architectures/v1_cvae/training/UniverseGenerator.py -i data/deep_space_1000.pt
-```
+If you're interested in contributing to the next phase, open an issue or reach out.
 
-**God Mode (Reverse Inference)**
-```bash
-python architectures/v1_cvae/inference/GenerateUniverse.py -p 24.0 -12.0 8.0
-```
+---
+
+## Project Status
+
+🟢 **Harvester** — Working. Scans the Kreuzer-Skarke database with Standard Model filtering.
+🟢 **SmartGraphBuilder** — Working. Converts raw simplices to PyTorch Geometric graphs.
+🟢 **BottNet (Oracle)** — Working. Trains and runs inference on topological prediction.
+🟡 **Diffusion (Dreamer)** — Experimental. Trains and generates samples, but generated manifolds do not yet pass CYTools validity checks consistently. This is the continuous-discrete trap in action — and the motivation for the v3 architecture.
+
+---
+
+## Related Work & Further Reading
+
+- [CYTools](https://cy.tools/) — The foundational Calabi-Yau analysis package this pipeline is built on
+- [edhirst/P4CY3ML](https://github.com/edhirst/P4CY3ML) — ML on P4 Calabi-Yau threefolds
+- [TomasSilva/LearningG2](https://github.com/TomasSilva/LearningG2) — Learning G2 manifolds
+- [DiGress](https://arxiv.org/abs/2209.14734) — Discrete denoising diffusion for graph generation (Vignac et al., ICLR 2023)
+- [Cometh](https://openreview.net/forum?id=nuN1mRrrjX) — Continuous-time discrete-state graph diffusion (Siraudin et al., TMLR 2025)
+- [He et al.](https://arxiv.org/abs/2408.05076) — Distinguishing Calabi-Yau topology using machine learning (2024)
+- [Erbin & Finotello](https://link.aps.org/doi/10.1103/PhysRevD.103.126014) — Machine learning for complete intersection Calabi-Yau manifolds
+- [The First Step to Solving the Universe](https://medium.com/@marquan03) — Companion article by Trevor Scott
+
+---
+
+## About
+
+Built by [Trevor Scott](https://github.com/trevorscott), inspired by the work of [Raoul Bott](https://en.wikipedia.org/wiki/Raoul_Bott).
+
+*Be persistent.*
