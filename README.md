@@ -11,32 +11,30 @@ This repository is a local, end-to-end Machine Learning pipeline designed to exp
 
 In string theory, the physics of our 4D reality—from the mass of an electron to the strength of gravity—is dictated by the geometry of 6 extra, invisible dimensions curled up into Calabi-Yau manifolds. With an estimated $10^{500}$ possible shapes, finding the one that matches our universe is fundamentally a Big Data problem.
 
-This project bridges theoretical physics and deep learning. It automates the harvesting of multi-dimensional geometric scaffolds and translates their topology into Graph Neural Networks (GNNs). The pipeline features a dual-engine architecture:
-1. **The Oracle (`BottNet`):** A predictive model that organically deduces the physical laws (intersection numbers) of existing universes directly from their structural geometry.
-2. **God Mode (CVAE):** A generative engine that reverse-engineers novel Calabi-Yau manifolds based on user-targeted physical parameters.
+This project bridges theoretical physics and deep learning. It automates the harvesting of multi-dimensional geometric scaffolds from the Kreuzer-Skarke database and translates their topology into Graph Neural Networks (GNNs). 
+
+The repository is structured as a **"living history" monorepo**, tracking the evolution from standard continuous generative models (V1) to state-of-the-art discrete denoising architectures (V2).
 
 ## Pipeline Architecture
-The codebase is structured into a four-stage experimental pipeline:
+The codebase is structured into four experimental stages:
 
 ### 1. ⛏️ Harvesting (`src/harvesting/`)
 * **Objective:** Mine the string theory landscape for mathematically stable universes.
 * **Mechanism:** Uses combinatorial C++ backends to shatter complex $h^{1,1}$ scaffolds, extracting the precise matrices of simplices that form the structural boundaries of Calabi-Yau spaces. Put simply, the $h^{1,1}$ scaffold represents the overarching blueprint and complexity of the extra dimensions, while the "simplices" are the fundamental, indivisible building blocks (like high-dimensional triangles or Lego bricks) that connect together to build the final shape. 
-* **Key Scripts:** `DeepSpaceHarvester.py`, `BigHarvester.py`
 
 ### 2. 🧬 Processing (`src/processing/`)
 * **Objective:** Translate discrete geometry into machine-readable mathematical formats.
 * **Mechanism:** Strips arbitrary vertex identifiers and maps the continuous manifolds into 3D Graph structures and Tensor datasets, ensuring the AI learns pure spatial relationships rather than memorizing noise.
-* **Key Scripts:** `SmartGraphBuilder.py`, `GlobalTensorizer.py`
 
-### 3. 🧠 Training (`src/models/` & `src/training/`)
-* **Objective:** Teach AI the inductive bias of string theory geometry.
-* **Mechanism:** Trains Graph Neural Networks (GNNs) to organically deduce topological intersection numbers (the capacity for physical laws) directly from structural blueprints, bypassing impossible analytical calculations.
-* **Key Scripts:** `BottNet.py`, `TrainGraphModel.py`, `UniverseGenerator.py`
+### 3. 🧠 V1: The Continuous Trap (`architectures/v1_cvae/`)
+* **Objective:** Solve the "Inverse Problem" using a Conditional Variational Autoencoder (CVAE).
+* **The Architecture:** Takes target physical laws as input, samples a continuous probability cloud, and hallucinates a geometric matrix.
+* **The Wall:** Standard VAEs output continuous probabilities (e.g., an edge exists at a 0.87 probability). But Calabi-Yau manifolds are perfectly rigid, discrete topological structures. Attempting to round these probabilities to 0 or 1 destroys the gradients and collapses the physics math. V1 remains in the repo as a foundational stepping stone.
 
-### 4. ⚡ Inference & God Mode (`src/inference/`)
-* **Objective:** Solve the "Inverse Problem" of string theory.
-* **Mechanism:** Deploys a Conditional Variational Autoencoder (CVAE). Instead of blindly searching $10^{500}$ shapes, this generative engine takes target physical laws as an input, samples a continuous probability cloud, and hallucinates the rigid geometric matrix of a novel universe.
-* **Key Scripts:** `GenerateUniverse.py`, `oracle.py`
+### 4. ⚡ V2: Discrete Graph Diffusion (`architectures/v2_diffusion/`)
+* **Objective:** The State-of-the-Art solution for discrete manifold generation.
+* **The Architecture:** Abandons continuous Gaussian noise. Instead, it uses a Markov Transition Matrix to violently corrupt perfect Calabi-Yau matrices into binary noise, bit by bit. A `DenseGCNConv` Graph Neural Network is then trained to natively reverse the entropy. 
+* **The Result:** The model organically learns the inductive bias of string theory geometry, outputting mathematically pure, rigid matrices natively on Apple Silicon (MPS) or CUDA.
 
 ## The Math and the Mission
 To find the master equation of reality, we must separate **Topology** (the squishy, invariant capacity for physics) from the **Metric** (the continuous, rigid geometry required to calculate exact particle masses). Finding the metric requires solving the non-linear Monge-Ampère equation—a task impossible for modern supercomputers to do blindly.
@@ -51,17 +49,16 @@ Before igniting the pipeline, ensure your system has the following installed:
 * **Conda / Mamba** (or **uv**): For strict environment and dependency management.
 * **Python 3.10+**
 * **cytools**: The foundational backend for Calabi-Yau algebraic geometry.
-* **PyTorch**: The engine for the Graph Neural Networks and Generative models.
+* **PyTorch & PyTorch Geometric**: The engines for the Graph Neural Networks.
 
 ## Setup & Execution
 
 *Note: Due to GitHub file size limits, the `data/` (.pt) and `checkpoints/` (.pth) directories are ignored. You must run the Harvesters locally to generate the raw universe datasets.*
 
 **1. Clone the Repository**
-To pull this project onto your local machine, open your terminal and run the following command. You can replace `string_theory_test` with whatever you want to name your local folder:
 ```bash
-git clone [https://github.com/trevorscott/string_theory_ml.git](https://github.com/trevorscott/string_theory_ml.git) string_theory_test
-cd string_theory_test
+git clone https://github.com/trevorscott/string_theory_ml.git
+cd string_theory_ml
 ```
 
 **2. Initialize the Environment**
@@ -83,7 +80,7 @@ conda install pytorch torchvision torchaudio -c pytorch
 
 # 4. Sync the remaining Python dependencies using uv
 uv sync
-
+```
 
 **3. Harvest the Multiverse**
 Mine the $h^{1,1}=10$ landscape for mathematically stable Calabi-Yau manifolds. 
@@ -102,18 +99,15 @@ DESCRIPTION
 
 OPTIONS
        -u, --universes <int>
-              The exact number of valid universes to harvest. The script will 
-              dynamically calculate the required number of scaffolds to shatter 
-              in order to meet this quota.
-              (default: 1000)
+              The exact number of valid universes to harvest. (default: 1000)
 ```
 **Example:**
 ```bash
-python src/harvesting/DeepSpaceHarvester.py
+python src/harvesting/DeepSpaceHarvester.py -u 10000
 ```
 
-**4. Process the Topology into Graphs**
-Strip the raw geometry of arbitrary identifiers and weave it into 3D Graph structures for the neural network.
+**4. Process the Topology into Graphs (Required for V1)**
+Strip the raw geometry of arbitrary identifiers and weave it into 3D Graph structures.
 
 ```text
 NAME
@@ -121,155 +115,66 @@ NAME
 
 SYNOPSIS
        python src/processing/SmartGraphBuilder.py -i <input_file> [OPTIONS]
-
-DESCRIPTION
-       Loads raw geometric simplices from the harvester and translates them into 
-       undirected mathematical graphs. This strips away arbitrary vertex identifiers 
-       and forces the AI to learn pure spatial and topological relationships.
-
-OPTIONS
-       -i, --input <file>
-              (Required) Path to the raw harvested universes file.
-              Example: data/deep_space_50000.pt
-
-       -o, --output <file>
-              (Optional) Path to save the processed graph dataset. If omitted, 
-              the script will automatically mirror the input filename 
-              (e.g., data/smart_graph_50000.pt).
 ```
 **Example:**
 ```bash 
 python src/processing/SmartGraphBuilder.py -i data/deep_space_1000.pt
 ```
 
-**5. Train the Oracle (The Forward Problem)**
-Train a Graph Neural Network (GNN) to organically deduce the topological intersection numbers (the capacity for physical laws) directly from the discrete mathematical graph of the manifold.
+---
+
+### 🚀 Training V2: Discrete Graph Diffusion (State-of-the-Art)
+Bypass the continuous rounding trap and train the native discrete denoising architecture.
 
 ```text
 NAME
-       TrainGraphModel.py - Train the Predictive Physics Oracle
+       train.py - Discrete Graph Diffusion Engine
 
 SYNOPSIS
-    python src/training/TrainGraphModel.py -i <input_file> [OPTIONS]
+       python -m architectures.v2_diffusion.train -f <input_file> [OPTIONS]
 
 DESCRIPTION
-       Loads the processed 3D Graph datasets and trains a neural network to predict 
-       the continuous physical properties of the universe based purely on its 
-       geometric fingerprint. This shatters the accuracy floor by learning the 
-       inductive bias of string theory.
+       Loads raw harvested universes and dynamically translates them into padded 
+       adjacency matrices. Corrupts the structures using a Markov Transition Matrix 
+       and trains a DenseGCNConv Graph Neural Network to reverse the entropy, 
+       learning the rigid rules of topological physics. Natively supports MPS/CUDA.
 
 OPTIONS
-       -i, --input <file>
-              (Required) Path to the processed graph dataset.
-              Example: data/smart_graph_50000.pt
-
-       -o, --output <file>
-              (Optional) Path to save the trained Oracle weights.
-              (default: checkpoints/gnn_universe_model.pth)
+       -f, --file <str>
+              (Required) Path to the raw harvested .pt dataset.
 
        -e, --epochs <int>
-              (Optional) Number of training epochs. (default: 150)
+              (Optional) Number of training epochs. (default: 50)
 
        -b, --batch_size <int>
               (Optional) Batch size for the dataloader. (default: 32)
 ```
 **Example:**
 ```bash
-python src/training/TrainGraphModel.py -i data/smart_graph_1000.pt -e 150
+python -m architectures.v2_diffusion.train -f data/deep_space_1000.pt -e 50
 ```
 
-**6. Consult the Oracle (Inference)**
-Pass an unknown structural universe to the trained GNN and ask it to predict the laws of physics that would emerge from that geometry.
+---
 
-```text
-NAME
-       oracle.py - Forward problem inference engine
+### 🏛️ V1 Legacy: The Continuous CVAE 
+*(For historical reference on the continuous-to-discrete gradient trap)*
 
-SYNOPSIS
-       python src/inference/oracle.py -i <input_graph> [OPTIONS]
-
-DESCRIPTION
-       Loads the trained Oracle model and a target geometric graph. The AI performs 
-       a forward pass, analyzing the topological structure to output the predicted 
-       intersection numbers (physical constraints) of that specific manifold without 
-       solving the analytical math.
-
-OPTIONS
-       -i, --input <file>
-              (Required) Path to the single universe graph or dataset to analyze.
-
-       -m, --model <file>
-              (Optional) Path to the trained Oracle model weights. 
-              (default: checkpoints/gnn_universe_model.pth)
-```
-**Example:**
+**Train the Predictive Oracle**
 ```bash
-python src/inference/oracle.py -i data/smart_graph_50.pt
+python architectures/v1_cvae/training/TrainGraphModel.py -i data/smart_graph_1000.pt -e 150
 ```
 
-**7. Train the God Mode CVAE**
-Train the God Mode CVAE (Conditional Variational Autoencoder) to map the continuous probability cloud of the universe landscape.
-
-```text
-NAME
-       UniverseGenerator.py - Train the Generative Universe Model
-
-SYNOPSIS
-       python src/training/UniverseGenerator.py -i <input_file> [OPTIONS]
-
-DESCRIPTION
-       Loads the raw harvested dataset and trains a Conditional Variational Autoencoder. 
-       The model learns to encode geometric blueprints and target physical laws into a 
-       latent probability cloud, enabling the reverse-engineering of novel universes.
-
-OPTIONS
-       -i, --input <file>
-              (Required) Path to the raw harvested dataset. 
-              Example: data/deep_space_50000.pt
-
-       -o, --output <file>
-              (Optional) Path to save the trained model weights. 
-              (default: checkpoints/universe_generator.pth)
-
-       -e, --epochs <int>
-              (Optional) Number of training epochs. (default: 50)
-
-       -b, --batch_size <int>
-              (Optional) Batch size for the dataloader. (default: 64)
-```
-**Example:**
+**Consult the Oracle (Forward Inference)**
 ```bash
-python src/training/UniverseGenerator.py -i data/deep_space_1000.pt
+python architectures/v1_cvae/inference/oracle.py -i data/smart_graph_50.pt
 ```
 
-**8. God Mode (Inference)**
-Command the trained CVAE to hallucinate the geometric blueprint of a brand new universe by passing it arbitrary physical laws.
-
-```text
-NAME
-       GenerateUniverse.py - The Inverse Problem solver
-
-SYNOPSIS
-       python src/inference/GenerateUniverse.py [OPTIONS]
-
-DESCRIPTION
-       Loads the trained Generative God-Mode model and a random latent vector, 
-       then conditions the mathematical probability cloud with user-defined 
-       physical parameters. The AI will attempt to reverse-engineer and output 
-       the structural matrix (simplices) of a Calabi-Yau manifold that 
-       satisfies those exact laws.
-
-OPTIONS
-       -m, --model <file>
-              (Optional) Path to the trained model weights. 
-              (default: checkpoints/universe_generator.pth)
-
-       -p, --physics <float> [<float> ...]
-              (Optional) A list of target physical properties you want your 
-              custom universe to possess (mapped to intersection numbers).
-              (default: 24.0 -12.0 8.0)
-```
-**Example:**
+**Train the God Mode CVAE**
 ```bash
-python src/inference/GenerateUniverse.py
+python architectures/v1_cvae/training/UniverseGenerator.py -i data/deep_space_1000.pt
+```
+
+**God Mode (Reverse Inference)**
+```bash
+python architectures/v1_cvae/inference/GenerateUniverse.py -p 24.0 -12.0 8.0
 ```

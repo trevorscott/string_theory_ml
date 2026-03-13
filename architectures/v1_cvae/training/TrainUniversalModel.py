@@ -93,3 +93,4 @@ for epoch in range(epochs):
 
 torch.save(model.state_dict(), "universal_model.pth")
 print("\n✅ Universal Model Saved! The landscape has been mapped.")
+

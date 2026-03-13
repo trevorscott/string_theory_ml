@@ -94,3 +94,4 @@ if __name__ == "__main__":
     if len(simplices) > 10:
         print("  ... (blueprint truncated for screen)")
     print("="*50)
+

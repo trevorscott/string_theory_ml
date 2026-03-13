@@ -85,3 +85,4 @@ if np.mean(np.abs(prediction)) < 0.01:
 else:
     print("\n✅ The model is projecting its 'intuition' onto the new scaffold!")
     print("Top 5 Predicted Couplings:", prediction[:5])
+
