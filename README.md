@@ -62,16 +62,14 @@ cd string_theory_ml
 conda create -n string_theory_ml python=3.11
 conda activate string_theory_ml
 
-# 3. Install CYTools (requires Conda — this pulls in C++ backends)
-conda install -c conda-forge cytools
-
-# 4. Prevent OpenMP/MKL thread conflicts (important on macOS)
+# 3. Install everything via conda
+conda install -c conda-forge cytools numpy scipy matplotlib tqdm
 conda install nomkl
 conda install pytorch -c pytorch
-conda install numpy
+conda install -c pyg pyg
 
-# 5. Install remaining Python dependencies
-uv sync
+# 4. Install the repo itself
+pip install -e .
 ```
 
 > ⚠️ **macOS Note:** Do *not* use `KMP_DUPLICATE_LIB_OK=True` as a workaround for OpenMP segfaults. The `nomkl` install above is the correct fix — it prevents Intel MKL from silently bottlenecking your CPU threads during training.
