@@ -68,6 +68,7 @@ conda install -c conda-forge cytools
 # 4. Prevent OpenMP/MKL thread conflicts (important on macOS)
 conda install nomkl
 conda install pytorch -c pytorch
+conda install numpy
 
 # 5. Install remaining Python dependencies
 uv sync
