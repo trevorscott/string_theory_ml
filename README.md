@@ -231,10 +231,10 @@ If you're interested in contributing to the next phase, open an issue or reach o
 
 ## Project Status
 
-🟢 **Harvester** — Working. Scans the Kreuzer-Skarke database with Standard Model filtering. Supports targeted Hodge number ranges via `--h11_min` / `--h11_max`.
-🟢 **SmartGraphBuilder** — Working. Converts raw simplices to PyTorch Geometric graphs.
-🟢 **BottNet (Oracle)** — Working. Trains and runs inference on intersection number prediction.
-🟡 **Diffusion (Dreamer)** — Experimental. Trains and generates structured candidate matrices, but none pass CYTools validity checks. This is the continuous-discrete trap in action — and the motivation for the v3 architecture.
+🟢 **Harvester** — Working. Scans the Kreuzer-Skarke database with Standard Model filtering. Supports targeted Hodge number ranges via `--h11_min` / `--h11_max`.  
+🟢 **SmartGraphBuilder** — Working. Converts raw simplices to PyTorch Geometric graphs.  
+🟢 **BottNet (Oracle)** — Working. Trains and runs inference on intersection number prediction.  
+🟡 **Diffusion (Dreamer)** — Experimental. Trains and generates structured candidate matrices, but none pass CYTools validity checks. This is the continuous-discrete trap in action — and the motivation for the v3 architecture.  
 
 ---
 
