@@ -10,37 +10,39 @@ An end-to-end machine learning pipeline for exploring the string theory landscap
 
 This is an **educational and exploratory** project that bridges theoretical physics and deep learning. It is not a research paper. It's a working pipeline that lets any engineer with a laptop mine the mathematical landscape of string theory, train neural networks on the geometry of hidden dimensions, and explore what it would take to reverse-engineer the shape of our universe.
 
-If you want the full story — why string theory needs ML, what Calabi-Yau manifolds are, and how this connects to the search for a Theory of Everything — read the companion article: **[The First Step to Solving the Universe: AI, Topology, and String Theory](https://medium.com/@marquan03)**.
-
 This repo walks you through three things:
 
-1. **Mining the multiverse** — Harvesting thousands of mathematically valid Calabi-Yau manifolds from the Kreuzer-Skarke database, filtered for Standard Model compatibility
-2. **Teaching AI to read geometry** — Training a Graph Neural Network to predict the physical laws (intersection numbers) of a universe from its structural blueprint
-3. **Dreaming new universes** — Using a generative diffusion model to attempt the inverse problem: given target physics, generate geometry
+1. **Mining the landscape** — Harvesting mathematically valid Calabi-Yau manifolds from the Kreuzer-Skarke database, filtered for Standard Model compatibility
+2. **Teaching AI to read geometry** — Training a Graph Neural Network to predict the topological properties (intersection numbers) of a manifold from its structural blueprint
+3. **Attempting the inverse problem** — Using a generative diffusion model to ask: given target physics, what geometry produces them?
 
 ---
 
 ## The Big Idea (60-Second Version)
 
-String theory says the physics of our universe — particle masses, force strengths, everything — is determined by the shape of 6 extra dimensions curled up at every point in space. These shapes are called **Calabi-Yau manifolds**.
+String theory says the physics of our universe — particle masses, force strengths, everything — emerges from the geometry of 6 extra dimensions curled up at every point in space, combined with the configuration of energy fields threaded through them. These hidden dimensions take the shape of mathematical objects called **Calabi-Yau manifolds**. Finding the right geometry is the Step 1 of many to find the final form of our universe. 
 
-There are an estimated 10^500 possible shapes. Finding the one that matches our universe is a needle-in-a-haystack problem. This pipeline uses modern tools & machine learning to:
+There are 10^80 atoms in the universe. A **vacuum configuration** is a potential version of reality — a different combination of geometry and energy fields that produces a self-consistent set of physical laws. String theory has around 10^500 of them. Finding the geometry that matches our universe is a needle-in-a-multiversic-haystack problem of almost incomprehensible scale. This pipeline applies an imperfect filter in an attempt to identify potential candidates. It uses machine learning to:
 
-- **Filter** the landscape for physically motivated candidates
-- **Predict** topological properties (the "DNA" of a shape) using GNNs instead of impossible analytical math
-- **Generate** new candidate geometries using diffusion models
+- **Filter** the landscape for physically motivated candidates using topological constraints
+- **Predict** topological invariants (intersection numbers) using GNNs instead of expensive analytical computation
+- **Attempt generation** of new candidate geometries using diffusion models — and document exactly where that attempt hits a known frontier problem
 
 ---
 
 ## The Standard Model Filter
 
-This pipeline filters for **manifold candidates with physics that matches our universe**. Our universe has 3 generations of matter particles (electron/muon/tau, up/charm/top, etc.), which in string theory corresponds to an Euler characteristic of ±6:
+This pipeline applies a topological first-pass filter motivated by a key property of our universe: three generations of matter particles (electron/muon/tau, up/charm/top, etc.).
+
+In the heterotic string framework, the number of matter generations is directly related to the Euler characteristic of the Calabi-Yau manifold:
 
 ```
 |h¹·¹ - h²·¹| = 3   →   χ = ±6
 ```
 
-Scanning the Kreuzer-Skarke database for this constraint yields a focused dataset of Standard Model candidate universes — the geometries that could plausibly describe the hidden dimensions of *our* universe.
+This pipeline uses the Kreuzer-Skarke database, which is built for Type IIB string compactifications. In that context, the Hodge number filter is a physically motivated proxy — not a rigorous derivation. It may miss some valid candidates and include some false ones. But it eliminates the vast majority of geometrically incompatible manifolds and makes the search tractable.
+
+**This filter is a first gate, not a complete physical constraint.** A manifold passing this filter has the right topological capacity for three generations of matter. Whether it produces the correct particle masses, force strengths, gauge group, and cosmological constant requires the full metric — which requires solving the Monge-Ampère equation — a fully nonlinear partial differential equation that becomes computationally ruinous when applied across hundreds of millions of manifolds.
 
 ---
 
@@ -49,7 +51,6 @@ Scanning the Kreuzer-Skarke database for this constraint yields a focused datase
 - **Git**
 - **Conda or Mamba** — Required for CYTools and its C++ algebraic geometry backends
 - **Python 3.11** (3.12+ has compatibility issues with CYTools on Apple Silicon)
-- **uv** — For remaining Python dependency management
 
 ## Setup
 
@@ -76,25 +77,34 @@ pip install -e .
 
 ---
 
+## Documentation
+
+If you want to go on a self-guided adventure, check out the docs:
+
+- [DOCUMENTATION.md](DOCUMENTATION.md) — Unix-style manual pages for all pipeline scripts
+
 ## Walkthrough
 
 The pipeline has three stages. Each builds on the output of the previous one.
 
-### Stage 1: Mine the Multiverse
+### Stage 1: Mine the Landscape
 
-The harvester downloads polytope scaffolds from the Kreuzer-Skarke database, generates random triangulations via CYTools' C++ backend, and filters for Calabi-Yau manifolds that satisfy the Standard Model constraint (`|h¹·¹ - h²·¹| = 3`). For each valid manifold, it extracts the simplicial complex (the discrete structural skeleton) and the intersection numbers (the physics).
+The harvester downloads polytope scaffolds from the Kreuzer-Skarke database, generates random triangulations via CYTools' C++ backend, and filters for Calabi-Yau manifolds that satisfy the Standard Model constraint (`|h¹·¹ - h²·¹| = 3`). For each valid manifold, it extracts the simplicial complex (the discrete structural skeleton) and the intersection numbers.
 
 ```bash
-# Harvest 50 Standard Model candidate universes (quick test)
+# Harvest 50 Standard Model candidate manifolds (quick test)
 python src/harvesting/DeepSpaceHarvester.py -u 50
 
-# Full harvest — this takes a while
+# Target a specific Hodge number range (recommended for focused datasets)
+python src/harvesting/DeepSpaceHarvester.py -u 5000 --h11_min 17 --h11_max 53
+
+# Full harvest across the KS database
 python src/harvesting/DeepSpaceHarvester.py -u 5000
 ```
 
 **Output:** `data/standard_model_N.pt` — a list of dictionaries, each containing:
 - `X_simplices` — the simplicial complex (list of vertex tuples forming the structural skeleton)
-- `Y_physics` — the intersection numbers (the target physical properties)
+- `Y_physics` — the intersection numbers (the prediction target)
 - `h11`, `h21`, `euler` — the Hodge numbers and Euler characteristic
 
 > **Note:** Data files are not committed to the repo (they exceed GitHub's size limits). You must run the harvester locally to generate them.
@@ -103,7 +113,7 @@ python src/harvesting/DeepSpaceHarvester.py -u 5000
 
 *"Given a geometry, what are the physics?"*
 
-This is the forward problem. We train a Graph Neural Network (BottNet) to predict the intersection numbers of a manifold directly from its simplicial geometry — bypassing the analytically impossible math that would otherwise be required.
+This is the forward problem. We train a Graph Neural Network (BottNet) to predict the intersection numbers of a manifold directly from its simplicial geometry — bypassing the analytically expensive computation that would otherwise be required.
 
 **Step 2a: Convert raw geometry into graphs**
 
@@ -125,13 +135,13 @@ python architectures/v1_cvae/training/TrainGraphModel.py -i data/smart_graph_sta
 
 **Step 2c: Run inference**
 
-Pass an unknown manifold to the trained Oracle and ask it to predict the physics:
+Pass a manifold to the trained Oracle and ask it to predict the intersection numbers:
 
 ```bash
 python architectures/v1_cvae/inference/oracle.py -i data/smart_graph_standard_model_50.pt
 ```
 
-This prints predicted vs. actual intersection numbers for a sample of universes in the dataset.
+This prints predicted vs. actual intersection numbers for a sample of manifolds in the dataset.
 
 ### Stage 3: The Dreamer (Inverse Problem)
 
@@ -151,13 +161,13 @@ python -m architectures.v2_diffusion.train -f data/standard_model_50.pt -e 50 -b
 
 **Output:** `checkpoints/v2_diffusion_model.pth`
 
-**Step 3b: Generate universes**
+**Step 3b: Generate and validate candidates**
 
 ```bash
 python -m architectures.v2_diffusion.validate -m checkpoints/v2_diffusion_model.pth -s 20
 ```
 
-This generates candidate adjacency matrices and (if CYTools is available) validates whether they correspond to real Calabi-Yau manifolds.
+This generates candidate adjacency matrices and validates whether they correspond to real Calabi-Yau manifolds via CYTools.
 
 ---
 
@@ -192,13 +202,15 @@ smart_graph_standard_model_N.pt              │
 
 ## The Continuous vs. Discrete Trap
 
-A key finding from building this pipeline: continuous generative models (VAEs, vanilla Gaussian diffusion) **cannot natively produce valid discrete topology**.
+A key finding from building this pipeline: continuous generative models cannot natively produce valid discrete topology.
 
-Calabi-Yau adjacency matrices are binary — a structural connection either exists (1) or it doesn't (0). When a continuous neural network outputs a fractional value like 0.87, the mathematical wireframe can't snap together. The simulated universes collapse.
+Calabi-Yau adjacency matrices are binary — a structural connection either exists (1) or it doesn't (0). When a continuous neural network outputs a fractional value like 0.87, the mathematical wireframe can't snap together properly.
 
-Think of it like trying to build a Lego set out of Play-Doh. The AI wants to output smooth, continuous values, but the underlying structure demands discrete, integer-valued geometry.
+The v2 diffusion model generates structured 50×50 adjacency matrices with genuine internal patterns — not random noise. But when fed into CYTools for validation, none pass. The matrices have the appearance of structure without the underlying geometric validity. A connection that should be 0 is 0.3. A simplex that needs to close cleanly leaves a fractional gap.
 
-This is an active area of research in geometric deep learning. The current diffusion implementation here uses binary noise corruption as a step in the right direction, but state-of-the-art approaches like [DiGress](https://arxiv.org/abs/2209.14734) (discrete denoising diffusion for graphs) and [Cometh](https://openreview.net/forum?id=nuN1mRrrjX) (continuous-time discrete-state graph diffusion) represent the frontier for this class of problem.
+Think of it like trying to build a Lego set out of Play-Doh. The model wants to output smooth, continuous values. The underlying structure demands discrete, integer-valued geometry.
+
+This is an active area of research in geometric deep learning. The current diffusion implementation uses binary noise corruption as a step in the right direction, but state-of-the-art approaches like [DiGress](https://arxiv.org/abs/2209.14734) (discrete denoising diffusion for graphs) and [Cometh](https://openreview.net/forum?id=nuN1mRrrjX) (continuous-time discrete-state graph diffusion) represent the frontier for this class of problem. The v2 architecture documents the wall. The v3 architecture will attempt to climb it.
 
 ---
 
@@ -207,20 +219,35 @@ This is an active area of research in geometric deep learning. The current diffu
 This repo is the educational foundation. A next-generation pipeline is in development that incorporates:
 
 - **True discrete graph diffusion** — A DiGress/Cometh-style noise model that operates in binary space natively, with a marginal-preserving Markov chain
-- **Graph transformer backbone** — Replacing message-passing GNNs with full O(n²) attention, enabling the model to capture global topological properties like "holes" in the manifold
+- **Graph transformer backbone** — Replacing message-passing GNNs with full O(n²) attention, enabling the model to capture global topological properties
 - **Spectral and structural features** — Laplacian eigenvectors and random walk encodings injected at each denoising step
 - **Classifier-free guidance** — Conditioning generation on target Hodge numbers without a separate classifier
 
-If you're interested in contributing to the next phase, open an issue or reach out.
+Full roadmap is here: - [ROADMAP.md](ROADMAP.md) 
+
+If you're interested in contributing to the next phase, open an issue or reach out. 
 
 ---
 
 ## Project Status
 
-🟢 **Harvester** — Working. Scans the Kreuzer-Skarke database with Standard Model filtering.
+🟢 **Harvester** — Working. Scans the Kreuzer-Skarke database with Standard Model filtering. Supports targeted Hodge number ranges via `--h11_min` / `--h11_max`.
 🟢 **SmartGraphBuilder** — Working. Converts raw simplices to PyTorch Geometric graphs.
-🟢 **BottNet (Oracle)** — Working. Trains and runs inference on topological prediction.
-🟡 **Diffusion (Dreamer)** — Experimental. Trains and generates samples, but generated manifolds do not yet pass CYTools validity checks consistently. This is the continuous-discrete trap in action — and the motivation for the v3 architecture.
+🟢 **BottNet (Oracle)** — Working. Trains and runs inference on intersection number prediction.
+🟡 **Diffusion (Dreamer)** — Experimental. Trains and generates structured candidate matrices, but none pass CYTools validity checks. This is the continuous-discrete trap in action — and the motivation for the v3 architecture.
+
+---
+
+## Limitations
+
+This pipeline searches one corner of a much larger landscape:
+
+- The Kreuzer-Skarke database covers one construction method for Calabi-Yau manifolds. Other families — Complete Intersection Calabi-Yaus (CICYs), free quotients, non-geometric constructions — are not represented. If our universe's geometry comes from one of those families, this pipeline won't find it.
+- The Hodge number filter is a topological proxy, not a complete physical constraint. It has both false positives and false negatives.
+- Even a manifold that passes every filter in this pipeline is nowhere near verified. Full verification requires the Ricci-flat metric — which requires solving the Monge-Ampère equation — plus flux compactification, moduli stabilization, and gauge group matching. None of that is in scope here.
+- The total number of Calabi-Yau manifolds across all construction methods is unknown and not proven to be finite, though most mathematicians believe it is.
+
+See [DOCUMENTATION.md](DOCUMENTATION.md) for full script reference.
 
 ---
 
@@ -233,12 +260,9 @@ If you're interested in contributing to the next phase, open an issue or reach o
 - [Cometh](https://openreview.net/forum?id=nuN1mRrrjX) — Continuous-time discrete-state graph diffusion (Siraudin et al., TMLR 2025)
 - [He et al.](https://arxiv.org/abs/2408.05076) — Distinguishing Calabi-Yau topology using machine learning (2024)
 - [Erbin & Finotello](https://link.aps.org/doi/10.1103/PhysRevD.103.126014) — Machine learning for complete intersection Calabi-Yau manifolds
-- [The First Step to Solving the Universe](https://medium.com/@marquan03) — Companion article by Trevor Scott
 
 ---
 
 ## About
 
 Built by [Trevor Scott](https://github.com/trevorscott), inspired by the work of his grandfather [Raoul Bott](https://en.wikipedia.org/wiki/Raoul_Bott).
-
-*Be persistent.*
