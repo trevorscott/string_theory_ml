@@ -266,3 +266,5 @@ See [DOCUMENTATION.md](DOCUMENTATION.md) for full script reference.
 ## About
 
 Built by [Trevor Scott](https://github.com/trevorscott), inspired by the work of his grandfather [Raoul Bott](https://en.wikipedia.org/wiki/Raoul_Bott).
+
+*Stupider than everyone else, but, persistent*
