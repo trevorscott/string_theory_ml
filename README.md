@@ -2,13 +2,13 @@
 
 *"There are two ways to do great mathematics. The first is to be smarter than everybody else. The second way is to be stupider than everybody else — but persistent." — Raoul Bott*
 
-An end-to-end machine learning pipeline for exploring the string theory landscape — built for engineers and curious minds, not just physicists.
+An end-to-end machine learning pipeline for exploring the string theory landscape.
 
 ---
 
 ## What Is This?
 
-This is an **educational and exploratory** project that bridges theoretical physics and deep learning. It is not a research paper. It's a working pipeline that lets any engineer with a laptop mine the mathematical landscape of string theory, train neural networks on the geometry of hidden dimensions, and explore what it would take to reverse-engineer the shape of our universe.
+This is an **educational and exploratory** project that bridges theoretical physics and deep learning. It's a working pipeline that lets anyone with a laptop mine the mathematical landscape of string theory, train neural networks on the geometry of our hidden dimensions, and explore what it would take to reverse-engineer the shape of our universe.
 
 This repo walks you through three things:
 
